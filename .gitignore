@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+data/luna.db
+logs/
+.DS_Store
+temp_circles/

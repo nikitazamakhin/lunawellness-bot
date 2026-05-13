@@ -1,0 +1,10 @@
+services:
+  luna-bot:
+    build: .
+    container_name: luna-bot
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./media:/app/media
+      - ./logs:/app/logs
