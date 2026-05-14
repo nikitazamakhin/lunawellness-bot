@@ -192,7 +192,7 @@ async def get_incomplete_funnel_users() -> list[dict]:
         db.row_factory = aiosqlite.Row
         cursor = await db.execute(
             "SELECT telegram_id, funnel_step FROM users "
-            "WHERE funnel_step > 0 AND funnel_step < 10 AND booked = 0"
+            "WHERE funnel_step > 0 AND funnel_step < 12 AND booked = 0"
         )
         rows = await cursor.fetchall()
         return [dict(row) for row in rows]
