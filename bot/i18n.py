@@ -731,18 +731,120 @@ TRANSLATIONS = {
             "Qo'shiling 👇"
         ),
 
+        # Contact received (instant message) - UZ
+        "contact_received": (
+            "✨ <b>Rahmat! Tez orada bog'lanamiz</b>\n\n"
+            "Biz sizning kontaktingizni oldik!\n"
+            "Menejerimiz yaqin vaqt ichida siz bilan bog'lanib,\n"
+            "birinchi mashg'ulot uchun qulay vaqtni tanlashga yordam beradi.\n\n"
+            "Ayni paytda jadvalimizni ko'rib, yo'nalishni tanlashingiz mumkin 👇\n\n"
+            "💪 Reformer Pilates\n"
+            "🪂 Aerial Yoga\n"
+            "🚴 Cycling\n"
+            "💆 SPA\n\n"
+            "LUNA'da ko'rishguncha! 🌙"
+        ),
+
+        # Step 8-9 branching - UZ
+        "funnel_step_8_with_phone": (
+            "📋 <b>Birinchi mashg'ulotga tayyorgarlik</b>\n\n"
+            "O'zingiz bilan nima olib kelish kerak:\n\n"
+            "🎽 Qulay sport kiyim\n"
+            "👟 Krossovkalar (Cycling uchun)\n"
+            "   Paypoqlar (Reformer, Aerial, Yoga uchun)\n"
+            "💧 Suv (bizda bor, lekin o'zingizniki ham bo'lishi mumkin)\n\n"
+            "Sochiqlar, ko'rpachalar va barcha jihozlar — taqdim etamiz.\n\n"
+            "📍 Qanday yetib borish mumkin:\n"
+            "Kayan BC, Mahtumkuli ko'chasi, 1 (Toshkent markazi)\n"
+            "Avtoturargoh bor.\n\n"
+            "⏰ Boshlanishidan 10 daqiqa oldin keling —\n"
+            "studiyani ko'rsatamiz va murabbiy bilan tanishtiramiz.\n\n"
+            "Ko'rishguncha! 🤍"
+        ),
+
+        "funnel_step_8_no_phone": (
+            "⏰ <b>Sinab ko'rishga tayyormisiz?</b>\n\n"
+            "Siz LUNA haqida bilib oldingiz, bizning zallarimiz va yo'nalishlarimizni ko'rdingiz.\n\n"
+            "Faqat birinchi mashg'ulotga yozilish qoldi!\n\n"
+            "Sizni nima kutmoqda:\n"
+            "✅ To'liq mashg'ulot (60 daqiqa)\n"
+            "✅ Murabbiyning individual e'tibori\n"
+            "✅ Studiya va dam olish zonalarini sayohat\n\n"
+            "Guruhlar kichik — 10 kishigacha.\n"
+            "Bo'sh joylar kam.\n\n"
+            "\"Yozilish\" tugmasini bosing — qulay vaqtni tanlaymiz 👇"
+        ),
+
+        "funnel_step_9_with_phone": (
+            "👋 <b>Sizni mashg'ulotda kutamiz!</b>\n\n"
+            "Birinchi mashg'ulotga nima olib kelish kerak:\n\n"
+            "🎽 Qulay sport kiyim\n"
+            "👟 Krossovkalar (Cycling uchun)\n"
+            "   Paypoqlar (boshqa yo'nalishlar uchun)\n"
+            "💧 Suv (bizda bor, lekin o'zingizniki ham bo'lishi mumkin)\n\n"
+            "Sochiqlar, ko'rpachalar va barcha jihozlar — taqdim etamiz.\n\n"
+            "Mashg'ulotdan keyin — choy, dam olish zonasi va dushlar.\n\n"
+            "📍 Kayan BC, Mahtumkuli ko'chasi, 1\n"
+            "🕐 Boshlanishidan 10 daqiqa oldin\n\n"
+            "Ko'rishguncha! 🤍"
+        ),
+
+        "funnel_step_9_no_phone": (
+            "🌙 <b>Siz hali ham biz bilan birgasiz</b>\n\n"
+            "Biz sizning LUNA bilan bir kun davomida qiziqib turganingizni payqadik.\n\n"
+            "Ehtimol, hali o'ylab ko'ryapsizmi?\n\n"
+            "Nimani bilish muhim:\n\n"
+            "✨ Birinchi mashg'ulot — bu shunchaki tanishuv\n"
+            "   Hech kim sizdan darhol natija kutmaydi\n\n"
+            "✨ Guruhlar kichik — 10 kishigacha\n"
+            "   Murabbiy har birini ko'radi va yordam beradi\n\n"
+            "✨ Muhit osoyishta\n"
+            "   Bu yerda mukammal bo'lish shart emas\n\n"
+            "Ko'pchilik mijozlarimiz \"shunchaki ko'rish\" uchun kelishgan —\n"
+            "va qolishgan.\n\n"
+            "Agar savollaringiz bo'lsa — raqamingizni qoldiring,\n"
+            "menejerimiz batafsil ma'lumot beradi.\n\n"
+            "Sinab ko'rasizmi? 👇"
+        ),
+
+        # Step 10-12 (only no_phone) - UZ
         "funnel_step_10": (
-            "⏳ <b>Biz siz uchun joy qoldirib qo'ydik</b>\n\n"
-            "Kecha siz LUNA bilan qiziqtingiz — "
-            "va biz siz uchun jadvaldagi joyni band qildik.\n\n"
-            "Lekin guruhlar kichik (10 kishigacha), "
-            "va bo'sh o'rinlar kam.\n\n"
-            "Birinchi mashg'ulotda sizni nima kutmoqda:\n"
-            "• To'liq mashg'ulot\n"
-            "• Murabbiyning individual e'tibori\n"
-            "• Studiya va dam olish zonalari bo'ylab sayohat\n\n"
-            "<b>Bron yana 48 soat amal qiladi.</b>\n\n"
-            "«Yozilish» tugmasini bosing — qulay vaqtni tanlaymiz 👇"
+            "💬 <b>Mijozlarimiz nima deyishadi</b>\n\n"
+            "«LUNA — bu mening kuch joyim. 3 oy ichida\n"
+            "gavda, tonus va hatto kayfiyat o'zgardi» — Anastasiya\n\n"
+            "«Toshkentdagi turli studiyalarda bo'ldim, lekin LUNA — raqobatsiz.\n"
+            "Bu yerda o'zimni maxsus his qilaman» — Mariya\n\n"
+            "«Birinchi mashg'ulotga yozildim va abadiy qoldim.\n"
+            "Men o'z jamiyatimni topdim» — Zarina\n\n"
+            "LUNA hamjamiyatiga qo'shiling 👇"
+        ),
+
+        "funnel_step_11": (
+            "⚠️ <b>Guruhda 2 ta joy qoldi</b>\n\n"
+            "Biz kichik guruhlarni saqlashga harakat qilamiz — 10 kishigacha.\n\n"
+            "Bu haftada bo'sh joylar deyarli qolmadi:\n\n"
+            "💪 Reformer Pilates — 2 ta joy\n"
+            "🪂 Aerial Yoga — 3 ta joy\n"
+            "🚴 Cycling — 1 ta joy\n\n"
+            "Agar hali o'ylayotgan bo'lsangiz — tezroq qaror qiling.\n"
+            "Keyingi haftada joylar bo'lmasligi mumkin.\n\n"
+            "Hozir yozilishingiz mumkin 👇"
+        ),
+
+        "funnel_step_12": (
+            "❓ <b>Savollar qoldimi?</b>\n\n"
+            "Biz siz bir hafta davomida LUNA bilan qiziqib turganingizni payqadik,\n"
+            "lekin hali yozilmadingiz.\n\n"
+            "Ehtimol, savollaringiz bormi?\n\n"
+            "Mijozlarimizning tez-tez so'raydigan savollari:\n\n"
+            "• «Men hech qachon mashq qilmaganman, menga mumkinmi?»\n"
+            "   → Ha! Barcha mashg'ulotlar sizning darajangizga moslashtiriladi\n\n"
+            "• «Menga sport kiyim kerakmi?»\n"
+            "   → Ha, qulay kiyim va paypoqlar/krossovkalar\n\n"
+            "• «Studiyani ko'rishga kelishim mumkinmi?»\n"
+            "   → Albatta! Qo'ng'iroq qiling, vaqtni kelishamiz\n\n"
+            "Bizga qo'ng'iroq qiling yoki onlayn yoziling 👇\n\n"
+            "📞 +998 78 555 57 57"
         ),
     }
 }
