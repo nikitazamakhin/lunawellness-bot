@@ -252,7 +252,7 @@ TRANSLATIONS = {
 
         "funnel_step_4": (
             "✨ <b>Reformer Pilates</b>\n\n"
-            "Деревянные реформеры, тёплый свет, "
+            "Реформеры, тёплый свет, "
             "камерная группа до 10 человек.\n\n"
             "Это не про «быстрее, выше, сильнее». "
             "Это про точные движения, глубокие мышцы "
@@ -582,7 +582,7 @@ TRANSLATIONS = {
 
         "funnel_step_4": (
             "✨ <b>Reformer Pilates</b>\n\n"
-            "Yog'och reformerlar, issiq yorug'lik, "
+            "Reformerlar, issiq yorug'lik, "
             "10 kishigacha kichik guruh.\n\n"
             "Bu «tezroq, balandroq, kuchliroq» haqida emas. "
             "Bu aniq harakatlar, chuqur mushaklar "
