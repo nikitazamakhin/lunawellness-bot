@@ -114,6 +114,16 @@ async def is_booked(telegram_id: int) -> bool:
         return bool(row and row[0])
 
 
+async def has_phone(telegram_id: int) -> bool:
+    """Check if user has provided phone number (has any booking record)."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
+            "SELECT COUNT(*) FROM bookings WHERE telegram_id = ?", (telegram_id,)
+        )
+        row = await cursor.fetchone()
+        return bool(row and row[0] > 0)
+
+
 async def save_booking(telegram_id: int, direction: str, day: str, name: str, phone: str):
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(

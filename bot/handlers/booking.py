@@ -107,12 +107,20 @@ async def _finish_booking(message: Message, state: FSMContext, phone: str):
     await mark_booked(message.from_user.id)
     await log_event(message.from_user.id, "booking", f"{direction} | {day}")
 
-    # Confirm to user (also removes reply keyboard)
+    # Send instant confirmation (removes reply keyboard)
+    await message.answer(
+        get_text(lang, "contact_received"),
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+    # Show booking details
     confirm_text = get_text(
         lang, "booking_confirm",
         direction=direction, day=day, name=name, phone=phone
     )
-    await message.answer(confirm_text, reply_markup=ReplyKeyboardRemove())
+    await message.answer(confirm_text)
+
+    # Show main menu
     await message.answer(
         get_text(lang, "booking_success_next"),
         reply_markup=main_menu(lang)
