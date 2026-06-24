@@ -16,6 +16,7 @@ async def init_db():
                 language TEXT DEFAULT 'ru',
                 funnel_step INTEGER DEFAULT 0,
                 booked INTEGER DEFAULT 0,
+                phone TEXT DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
@@ -28,9 +29,21 @@ async def init_db():
                 name TEXT NOT NULL,
                 phone TEXT NOT NULL,
                 status TEXT DEFAULT 'new',
+                odoo_lead_id INTEGER DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        # Migrations for existing DBs
+        try:
+            await db.execute("ALTER TABLE bookings ADD COLUMN odoo_lead_id INTEGER DEFAULT NULL")
+            await db.commit()
+        except Exception:
+            pass
+        try:
+            await db.execute("ALTER TABLE users ADD COLUMN phone TEXT DEFAULT NULL")
+            await db.commit()
+        except Exception:
+            pass
         await db.execute("""
             CREATE TABLE IF NOT EXISTS events (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,8 +128,14 @@ async def is_booked(telegram_id: int) -> bool:
 
 
 async def has_phone(telegram_id: int) -> bool:
-    """Check if user has provided phone number (has any booking record)."""
+    """Check if user has provided phone number (funnel or booking)."""
     async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
+            "SELECT phone FROM users WHERE telegram_id = ?", (telegram_id,)
+        )
+        row = await cursor.fetchone()
+        if row and row[0]:
+            return True
         cursor = await db.execute(
             "SELECT COUNT(*) FROM bookings WHERE telegram_id = ?", (telegram_id,)
         )
@@ -124,14 +143,63 @@ async def has_phone(telegram_id: int) -> bool:
         return bool(row and row[0] > 0)
 
 
-async def save_booking(telegram_id: int, direction: str, day: str, name: str, phone: str):
+async def save_user_phone(telegram_id: int, phone: str):
+    """Save phone collected in funnel (before booking)."""
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute(
+            "UPDATE users SET phone = ? WHERE telegram_id = ?",
+            (phone, telegram_id),
+        )
+        await db.commit()
+
+
+async def get_user_phone(telegram_id: int) -> str | None:
+    """Get phone from users table (may be None)."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
+            "SELECT phone FROM users WHERE telegram_id = ?", (telegram_id,)
+        )
+        row = await cursor.fetchone()
+        return row[0] if row and row[0] else None
+
+
+async def save_booking(telegram_id: int, direction: str, day: str, name: str, phone: str) -> int:
+    """Save booking and return its ID."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        cursor = await db.execute(
             "INSERT INTO bookings (telegram_id, direction, day, name, phone) VALUES (?, ?, ?, ?, ?)",
             (telegram_id, direction, day, name, phone),
         )
+        booking_id = cursor.lastrowid
         await db.commit()
     await mark_booked(telegram_id)
+    return booking_id
+
+
+async def mark_booking_synced(booking_id: int, odoo_lead_id: int):
+    """Mark a booking as synced to Odoo."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        await db.execute(
+            "UPDATE bookings SET odoo_lead_id = ? WHERE id = ?",
+            (odoo_lead_id, booking_id),
+        )
+        await db.commit()
+
+
+async def get_unsynced_bookings() -> list[dict]:
+    """Get all bookings not yet synced to Odoo."""
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        cursor = await db.execute(
+            """SELECT b.id, b.telegram_id, b.direction, b.day, b.name, b.phone,
+                      u.first_name, u.username
+               FROM bookings b
+               LEFT JOIN users u ON b.telegram_id = u.telegram_id
+               WHERE b.odoo_lead_id IS NULL
+               ORDER BY b.created_at ASC"""
+        )
+        rows = await cursor.fetchall()
+        return [dict(r) for r in rows]
 
 
 async def log_event(telegram_id: int, event_type: str, data: str = ""):

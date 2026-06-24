@@ -29,6 +29,17 @@ def phone_request(lang: str = "ru") -> ReplyKeyboardMarkup:
     )
 
 
+def phone_request_funnel(lang: str = "ru") -> ReplyKeyboardMarkup:
+    """Phone request keyboard used mid-funnel (has share contact button only)."""
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text=get_text(lang, "btn_share_contact"), request_contact=True)],
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=True,
+    )
+
+
 def main_menu(lang: str = "ru") -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text=get_text(lang, "btn_directions"), callback_data="menu:directions")],

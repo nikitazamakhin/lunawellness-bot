@@ -12,10 +12,13 @@ from bot.database import (
     log_event,
     get_incomplete_funnel_users,
     get_user_language,
+    get_unsynced_bookings,
+    mark_booking_synced,
 )
 from bot.i18n import get_funnel_step_text, get_text
-from bot.keyboards import booking_cta
+from bot.keyboards import booking_cta, phone_request_funnel, ReplyKeyboardRemove
 from bot.services.media import send_circle
+from bot.services.odoo_integration import create_lead_from_booking
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +48,43 @@ TEXT_STEPS = [
 async def schedule_funnel(bot: Bot, telegram_id: int, from_step: int = 2):
     """Schedule funnel messages for a user starting from given step."""
     asyncio.create_task(_run_funnel(bot, telegram_id, from_step))
+
+
+async def start_odoo_sync_loop(bot: Bot):
+    """Start background loop that retries unsynced bookings every 15 minutes."""
+    asyncio.create_task(_odoo_sync_loop())
+
+
+async def _odoo_sync_loop():
+    """Retry unsynced Odoo bookings every 15 minutes."""
+    while True:
+        await asyncio.sleep(900)  # 15 minutes
+        try:
+            unsynced = await get_unsynced_bookings()
+            if unsynced:
+                logger.info(f"Odoo sync: retrying {len(unsynced)} unsynced booking(s)")
+            for booking in unsynced:
+                try:
+                    result = await create_lead_from_booking(
+                        telegram_id=booking["telegram_id"],
+                        first_name=booking["name"],
+                        phone=booking["phone"],
+                        direction=booking["direction"],
+                        day=booking["day"],
+                    )
+                    if result["success"]:
+                        await mark_booking_synced(booking["id"], result["lead_id"])
+                        logger.info(
+                            f"✅ Odoo sync retry OK: booking #{booking['id']} → lead {result['lead_id']}"
+                        )
+                    else:
+                        logger.warning(
+                            f"Odoo sync retry failed: booking #{booking['id']}: {result.get('error')}"
+                        )
+                except Exception as e:
+                    logger.warning(f"Odoo sync retry exception: booking #{booking['id']}: {e}")
+        except Exception as e:
+            logger.error(f"Odoo sync loop error: {e}")
 
 
 async def resume_funnels(bot: Bot):
@@ -80,9 +120,10 @@ async def _run_funnel(bot: Bot, telegram_id: int, from_step: int = 2):
             if circle_sent:
                 await asyncio.sleep(3)
 
-            # Send text
+            # Send text; step 4 dismisses the phone request keyboard
             text = get_funnel_step_text(lang, step)
-            await bot.send_message(telegram_id, text, parse_mode="HTML")
+            reply_markup = ReplyKeyboardRemove() if step == 4 else None
+            await bot.send_message(telegram_id, text, parse_mode="HTML", reply_markup=reply_markup)
 
             await update_funnel_step(telegram_id, step)
             await log_event(
@@ -91,6 +132,16 @@ async def _run_funnel(bot: Bot, telegram_id: int, from_step: int = 2):
                 f"circle={'sent' if circle_sent else 'no_video'}",
             )
             logger.info(f"Funnel step {step} sent to {telegram_id}")
+
+            # After step 3: ask for phone if user hasn't shared it yet
+            if step == 3 and not await has_phone(telegram_id):
+                await asyncio.sleep(2)
+                await bot.send_message(
+                    telegram_id,
+                    get_text(lang, "funnel_phone_request"),
+                    reply_markup=phone_request_funnel(lang),
+                    parse_mode="HTML",
+                )
 
         except Exception as e:
             logger.warning(f"Funnel step {step} failed for {telegram_id}: {e}")

@@ -10,7 +10,7 @@ from aiogram.client.default import DefaultBotProperties
 from bot.config import settings
 from bot.database import init_db
 from bot.handlers import start, menu, booking, admin
-from bot.services.scheduler import resume_funnels
+from bot.services.scheduler import resume_funnels, start_odoo_sync_loop
 
 # Log to file for launchd (no stdout/stderr capture issues)
 LOG_DIR = Path(__file__).parent.parent / "logs"
@@ -47,6 +47,10 @@ async def main():
     # Resume incomplete funnels from before restart
     await resume_funnels(bot)
     logger.info("Incomplete funnels resumed")
+
+    # Start background Odoo sync (retries failed leads every 15 min)
+    await start_odoo_sync_loop(bot)
+    logger.info("Odoo sync loop started")
 
     logger.info("Starting LUNA Wellness Bot...")
     await dp.start_polling(bot)

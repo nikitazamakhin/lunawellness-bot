@@ -215,6 +215,17 @@ TRANSLATIONS = {
             "🆔 @{username} (ID: {telegram_id})"
         ),
 
+        # Funnel phone collection (after step 3)
+        "funnel_phone_request": (
+            "📱 <b>Хотите, чтобы мы сами позвонили?</b>\n\n"
+            "Оставьте номер — менеджер свяжется в течение дня и подберёт удобное время.\n\n"
+            "Никакого спама, только один звонок 🤍"
+        ),
+        "funnel_phone_received": (
+            "✅ <b>Спасибо! Номер сохранили.</b>\n\n"
+            "Менеджер свяжется с вами в ближайшее время 🤍"
+        ),
+
         # Contact received (instant message)
         "contact_received": (
             "✨ <b>Спасибо! Скоро свяжемся</b>\n\n"
@@ -729,6 +740,17 @@ TRANSLATIONS = {
             "Men o'z jamiyatimni topdim» "
             "— <i>Zarina</i>\n\n"
             "Qo'shiling 👇"
+        ),
+
+        # Funnel phone collection (after step 3) - UZ
+        "funnel_phone_request": (
+            "📱 <b>Biz o'zimiz qo'ng'iroq qilishimizni xohlaysizmi?</b>\n\n"
+            "Raqamingizni qoldiring — menejer kun davomida bog'lanib, qulay vaqtni tanlaydi.\n\n"
+            "Spam yo'q, faqat bitta qo'ng'iroq 🤍"
+        ),
+        "funnel_phone_received": (
+            "✅ <b>Rahmat! Raqamingizni saqladik.</b>\n\n"
+            "Menejer yaqin orada siz bilan bog'lanadi 🤍"
         ),
 
         # Contact received (instant message) - UZ

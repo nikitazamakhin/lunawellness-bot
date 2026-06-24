@@ -3,10 +3,14 @@ from aiogram.types import CallbackQuery, Message, ContentType
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
-from bot.database import save_booking, mark_booked, log_event, get_user_language
+from bot.database import save_booking, mark_booked, mark_booking_synced, log_event, get_user_language, get_user_phone
 from bot.i18n import get_text
 from bot.keyboards import booking_directions, booking_days, main_menu, phone_request, ReplyKeyboardRemove
 from bot.config import settings
+from bot.services.odoo_integration import create_lead_from_booking
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = Router()
 
@@ -61,7 +65,15 @@ async def pick_day(callback: CallbackQuery, state: FSMContext):
 async def enter_name(message: Message, state: FSMContext):
     data = await state.get_data()
     lang = data.get("lang", "ru")
-    await state.update_data(name=message.text.strip())
+    name = message.text.strip()
+    await state.update_data(name=name)
+
+    # If user already shared phone in funnel — skip phone step
+    existing_phone = await get_user_phone(message.from_user.id)
+    if existing_phone:
+        await _finish_booking(message, state, existing_phone)
+        return
+
     await message.answer(
         get_text(lang, "booking_phone"),
         reply_markup=phone_request(lang)
@@ -102,10 +114,33 @@ async def _finish_booking(message: Message, state: FSMContext, phone: str):
     day = data["day"]
     name = data["name"]
 
-    # Save to DB
-    await save_booking(message.from_user.id, direction, day, name, phone)
-    await mark_booked(message.from_user.id)
+    # Save to DB — get booking_id for Odoo tracking
+    booking_id = await save_booking(message.from_user.id, direction, day, name, phone)
     await log_event(message.from_user.id, "booking", f"{direction} | {day}")
+
+    # Create lead in Odoo CRM
+    try:
+        odoo_result = await create_lead_from_booking(
+            telegram_id=message.from_user.id,
+            first_name=name,
+            phone=phone,
+            direction=direction,
+            day=day
+        )
+        if odoo_result['success']:
+            await mark_booking_synced(booking_id, odoo_result['lead_id'])
+            logger.info(
+                f"✅ Odoo Lead created: {odoo_result['lead_id']} | "
+                f"Contact: {odoo_result['contact_id']} | "
+                f"User: {name} ({message.from_user.id})"
+            )
+        else:
+            logger.error(
+                f"❌ Failed to create Odoo lead (will retry): {odoo_result.get('error')} | "
+                f"User: {name} ({message.from_user.id})"
+            )
+    except Exception as e:
+        logger.error(f"❌ Exception while creating Odoo lead (will retry): {e} | User: {name} ({message.from_user.id})")
 
     # Send instant confirmation (removes reply keyboard)
     await message.answer(
